@@ -1,8 +1,8 @@
 <preprocess.mk
 
-PREPROCESS_ALL=`{find data/ -name '*.fastq*' | sed -e 's#^data/#results/preprocess/#g' -e 's#$##.uniq.cropped.dusted' }
-PREPROCESS_UNIQ=`{find data/ -name '*.fastq*' | sed -e 's#^data/#results/preprocess/#g' -e 's#$##.uniq' }
-PREPROCESS_CROP=`{find data/ -name '*.fastq*' | sed -e 's#^data/#results/preprocess/#g' -e 's#$##.uniq.cropped' }
+PREPROCESS_ALL=`{find -L data/ -name '*.fastq*' | sed -e 's#^data/#results/preprocess/#g' -e 's#$##.uniq.cropped.dusted' }
+PREPROCESS_UNIQ=`{find -L data/ -name '*.fastq*' | sed -e 's#^data/#results/preprocess/#g' -e 's#$##.uniq.dusted' }
+PREPROCESS_CROP=`{find -L data/ -name '*.fastq*' | sed -e 's#^data/#results/preprocess/#g' -e 's#$##.cropped.dusted' }
 
 preprocess:V: $PREPROCESS_ALL
 uniq:V: $PREPROCESS_UNIQ
@@ -16,7 +16,13 @@ results/preprocess/%.uniq:	data/%
 		$prereq \
 		> $target
 
-results/preprocess/%.croped:	results/preprocess/%
+results/preprocess/%.cropped:	results/preprocess/%.uniq
+	# This cropping is recommended by the SURPI pipeline
+	awk '(NR%2==1){print $0} (NR%2==0){print substr($0, 10, 75)}' \
+		$prereq \
+		> $target
+
+results/preprocess/%.cropped:	data/%
 	# This cropping is recommended by the SURPI pipeline
 	awk '(NR%2==1){print $0} (NR%2==0){print substr($0, 10, 75)}' \
 		$prereq \
