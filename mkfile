@@ -52,4 +52,4 @@ results/preprocess/%.prinseq-stats:	results/preprocess/%.fastq
 		-out_bad  results/preprocess/$stem.dusted.bad \
 		-lc_method dust \
 		-lc_threshold 7 \
-		> $stem.prinseq-stats
+		> results/preprocess/$stem.prinseq-stats
