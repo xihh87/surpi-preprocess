@@ -31,7 +31,9 @@ results/preprocess/%.cropped:	data/%
 		$prereq \
 		> $target
 
-results/preprocess/%.dusted.fastq	results/preprocess/%.dusted.bad.fastq:	results/preprocess/%
+results/preprocess/%.dusted.fastq	\
+results/preprocess/%.dusted.bad.fastq	\
+results/preprocess/%.prinseq-stats:	results/preprocess/%
 	mkdir -p `dirname $target`
 	FASTQ=3
 	prinseq-lite.pl \
@@ -40,4 +42,5 @@ results/preprocess/%.dusted.fastq	results/preprocess/%.dusted.bad.fastq:	results
 		-out_good results/preprocess/$stem.dusted \
 		-out_bad  results/preprocess/$stem.dusted.bad \
 		-lc_method dust \
-		-lc_threshold 7
+		-lc_threshold 7 \
+		> $stem.prinseq-stats
