@@ -1,55 +1,27 @@
-<preprocess.mk
+<dust.mk
 
-PREPROCESS_ALL=`{find -L data/ -name '*.fastq' -o -name '*.fastq.gz' \
-	| sed -e 's#^data/#results/preprocess/#g' \
-	 -e 's#\.fastq\(\.gz\)\?$#.uniq.cropped.dusted.fastq#g' }
-PREPROCESS_UNIQ=`{find -L data/ -name '*.fastq' -o -name '*.fastq.gz' \
-	| sed -e 's#^data/#results/preprocess/#g' \
-	 -e 's#\.fastq\(\.gz\)\?$#.uniq.dusted.fastq#g' }
-PREPROCESS_CROP=`{find -L data/ -name '*.fastq' -o -name '*.fastq.gz' \
-	| sed -e 's#^data/#results/preprocess/#g' \
-	 -e 's#\.fastq\(\.gz\)\?$#.cropped.dusted.fastq#g' }
+DUST_TARGETS=`{find -L data/ -name '*.fastq' -o -name '*.fastq.gz' \
+	| sed -e 's#^data/#results/dust/#g' \
+	 -e 's#_R\([12]\)_001\.fastq\(\.gz\)\?$#_\1.fastq#g' }
 
-preprocess:V: $PREPROCESS_ALL
-uniq:V: $PREPROCESS_UNIQ
-crop:V: $PREPROCESS_CROP
+dust:V: $DUST_TARGETS
 
 data/%.fastq:	data/%.fastq.gz
 	gzip -d -c $prereq > $target
 
-results/preprocess/%.uniq.fastq:	data/%.fastq
-	mkdir -p `dirname $target`
-	fastq \
-		filter \
-		--unique \
-		--adjust $PREPROCESS_QUALBASE \
-		$prereq \
-		> $target
-
-results/preprocess/%.uniq.cropped.fastq:	results/preprocess/%.uniq.fastq
-	mkdir -p `dirname $target`
-	# This cropping is recommended by the SURPI pipeline
-	awk '(NR%2==1){print $0} (NR%2==0){print substr($0, 10, 75)}' \
-		$prereq \
-		> $target
-
-results/preprocess/%.cropped.fastq:	data/%.fastq
-	mkdir -p `dirname $target`
-	# This cropping is recommended by the SURPI pipeline
-	awk '(NR%2==1){print $0} (NR%2==0){print substr($0, 10, 75)}' \
-		$prereq \
-		> $target
-
-results/preprocess/%.dusted.fastq	\
-results/preprocess/%.dusted.bad.fastq	\
-results/preprocess/%.prinseq-stats:	results/preprocess/%.fastq
-	mkdir -p `dirname $target`
+results/dust/%_1.fastq	\
+results/dust/%_2.fastq	\
+results/dust/%_bad_1.fastq	\
+results/dust/%_bad_2.fastq	\
+:	data/%_R1_001.fastq	data/%_R2_001.fastq
+	mkdir -p results/dust/`dirname $stem`
 	FASTQ=3
 	prinseq-lite.pl \
-		-fastq $prereq \
+		-fastq data/"$stem"_R1_001.fastq \
+		-fastq2 data/"$stem"_R2_001.fastq \
 		-out_format $FASTQ \
-		-log results/preprocess/$stem.log \
-		-out_good results/preprocess/$stem.dusted \
-		-out_bad  results/preprocess/$stem.dusted.bad \
+		-log results/dust/$stem.log \
+		-out_good results/dust/$stem \
+		-out_bad  results/dust/$stem_bad \
 		-lc_method dust \
 		-lc_threshold 7
