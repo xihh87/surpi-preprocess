@@ -48,8 +48,8 @@ results/preprocess/%.prinseq-stats:	results/preprocess/%.fastq
 	prinseq-lite.pl \
 		-fastq $prereq \
 		-out_format $FASTQ \
+		-log results/preprocess/$stem.log \
 		-out_good results/preprocess/$stem.dusted \
 		-out_bad  results/preprocess/$stem.dusted.bad \
 		-lc_method dust \
-		-lc_threshold 7 \
-		> results/preprocess/$stem.prinseq-stats
+		-lc_threshold 7
