@@ -11,10 +11,11 @@ data/%.fastq:	data/%.fastq.gz
 
 results/dust/%_1.fastq	\
 results/dust/%_2.fastq	\
-results/dust/%_bad_1.fastq	\
-results/dust/%_bad_2.fastq	\
+results/dust_bad/%_1.fastq	\
+results/dust_bad/%_2.fastq	\
 :	data/%_R1_001.fastq	data/%_R2_001.fastq
 	mkdir -p results/dust/`dirname $stem`
+	mkdir -p results/dust_bad/`dirname $stem`
 	FASTQ=3
 	prinseq-lite.pl \
 		-fastq data/"$stem"_R1_001.fastq \
@@ -22,6 +23,6 @@ results/dust/%_bad_2.fastq	\
 		-out_format $FASTQ \
 		-log results/dust/$stem.log \
 		-out_good results/dust/$stem \
-		-out_bad  results/dust/$stem_bad \
+		-out_bad  results/dust_bad/$stem \
 		-lc_method dust \
 		-lc_threshold 7
