@@ -11,8 +11,12 @@ data/%.fastq:	data/%.fastq.gz
 
 results/dust/%_1.fastq	\
 results/dust/%_2.fastq	\
+results/dust/%_1_singletons.fastq	\
+results/dust/%_2_singletons.fastq	\
 results/dust_bad/%_1.fastq	\
 results/dust_bad/%_2.fastq	\
+results/dust_bad/%_1_singletons.fastq	\
+results/dust_bad/%_2_singletons.fastq	\
 :	data/%_R1_001.fastq	data/%_R2_001.fastq
 	mkdir -p results/dust/`dirname $stem`
 	mkdir -p results/dust_bad/`dirname $stem`
@@ -25,4 +29,5 @@ results/dust_bad/%_2.fastq	\
 		-out_good results/dust/$stem \
 		-out_bad  results/dust_bad/$stem \
 		-lc_method dust \
-		-lc_threshold 7
+		-lc_threshold 7 \
+	&& touch $target
