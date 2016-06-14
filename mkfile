@@ -9,6 +9,7 @@ dust:V: $DUST_TARGETS
 data/%.fastq:	data/%.fastq.gz
 	gzip -d -c $prereq > $target
 
+results/dust/%.log	\
 results/dust/%_1.fastq	\
 results/dust/%_2.fastq	\
 results/dust/%_1_singletons.fastq	\
@@ -31,3 +32,6 @@ results/dust_bad/%_2_singletons.fastq	\
 		-lc_method dust \
 		-lc_threshold 7 \
 	&& touch $target
+
+clean_dust:V:
+	rm -r results/dust results/dust_bad
