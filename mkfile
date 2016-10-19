@@ -2,7 +2,7 @@
 
 DUST_TARGETS=`{find -L data/ -name '*.fastq' -o -name '*.fastq.gz' \
 	| sed -e 's#^data/#results/dust/#g' \
-	 -e 's#_R\([12]\)_001\.fastq\(\.gz\)\?$#_\1.fastq#g' }
+	 -e 's#_R\([12]\)\.fastq\(\.gz\)\?$#_\1.fastq#g' }
 
 dust:V: $DUST_TARGETS
 
@@ -18,13 +18,13 @@ results/dust_bad/%_1.fastq	\
 results/dust_bad/%_2.fastq	\
 results/dust_bad/%_1_singletons.fastq	\
 results/dust_bad/%_2_singletons.fastq	\
-:	data/%_R1_001.fastq	data/%_R2_001.fastq
+:	data/%_R1.fastq	data/%_R2.fastq
 	mkdir -p results/dust/`dirname $stem`
 	mkdir -p results/dust_bad/`dirname $stem`
 	FASTQ=3
 	prinseq-lite.pl \
-		-fastq data/"$stem"_R1_001.fastq \
-		-fastq2 data/"$stem"_R2_001.fastq \
+		-fastq data/"$stem"_R1.fastq \
+		-fastq2 data/"$stem"_R2.fastq \
 		-out_format $FASTQ \
 		-log results/dust/$stem.log \
 		-out_good results/dust/$stem \
