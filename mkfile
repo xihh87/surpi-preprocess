@@ -1,8 +1,6 @@
 <dust.mk
 
-DUST_TARGETS=`{find -L data/ -name '*.fastq' -o -name '*.fastq.gz' \
-	| sed -e 's#^data/#results/dust/#g' \
-	 -e 's#_R\([12]\)\.fastq\(\.gz\)\?$#_\1.fastq#g' }
+DUST_TARGETS=`{./targets_dust}
 
 dust:V: $DUST_TARGETS
 

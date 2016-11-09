@@ -1,0 +1,7 @@
+#!/bin/sh
+find -L data/ \
+	-name '*.fastq' \
+	-o -name '*.fastq.gz' \
+| sed \
+	-e 's#^data/#results/dust/#g' \
+	-e 's#_R\([12]\)\.fastq\(\.gz\)\?$#_\1.fastq#g'
